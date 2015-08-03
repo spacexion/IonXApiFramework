@@ -4,7 +4,7 @@ require_once realpath(__DIR__."/ApiRequest.php");
 require_once realpath(__DIR__."/ApiCookie.php");
 
 /**
- * ApiRequestParser is a class that allow to parse request datas
+ * ApiRequestParser is a class that allow to parse request data
  * @author XION
  */
 class ApiRequestParser {
@@ -63,10 +63,10 @@ class ApiRequestParser {
 		$cookies = array();
 
 		foreach($_COOKIE as $cookieName => $cookieValue) {
-			$apiCookie = new HttpCookie();
+			$apiCookie = new ApiCookie();
 			$apiCookie->setName($cookieName);
 			$apiCookie->setValue($cookieValue);
-			$cookie[] = $apiCookie;
+			$cookies[] = $apiCookie;
 		}
 		
 		return $cookies;
@@ -87,6 +87,22 @@ class ApiRequestParser {
         $apiUrl->setPass((isset($url["pass"]) ? $url["pass"] : ""));
         $apiUrl->setPath((isset($url["path"]) ? $url["path"] : ""));
         $apiUrl->setFragment((isset($url["fragment"]) ? $url["fragment"] : ""));
+
+        if(isset($url["path"])) {
+            $path = $url["path"];
+            $path = trim(str_replace(Config::$uriApi, "", trim($path, '/')), '/');
+            $pathArray = explode('/', $path);
+
+            if(isset($pathArray[0])) {
+                $apiUrl->setApiProject($pathArray[0]);
+            }
+            if(isset($pathArray[1])) {
+                $apiUrl->setApiObject($pathArray[1]);
+            }
+            if(isset($pathArray[2])) {
+                $apiUrl->setApiId($pathArray[2]);
+            }
+        }
 
         if(isset($url["query"])) {
             parse_str($url["query"], $urlQuery);

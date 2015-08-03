@@ -53,9 +53,9 @@ class ApiCommand {
     /**
      * @return string
      */
-    public function getManager()
+    public function getName()
     {
-        return $this->manager;
+        return $this->managerMethod;
     }
 
     /**

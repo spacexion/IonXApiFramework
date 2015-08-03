@@ -54,14 +54,13 @@ class ApiRequest {
 	 * The user host
 	 */
 	private $userHost = "";
-	
-	
 	/**
 	 * The request method (GET,POST,PUT,DELETE)
 	 */
 	private $method = "";
 	/**
-	 * The request url data as ApiUrl object (See: RequestParser::parse())
+     * The request url data as ApiUrl object (See: RequestParser::parse())
+	 * @type ApiUrl
 	 */
 	private $url;
     /**
@@ -296,7 +295,7 @@ class ApiRequest {
 	}
 	
 	/**
-	* @return int
+	* @return string
 	*/
 	public function getMethod()
 	{

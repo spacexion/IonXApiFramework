@@ -23,13 +23,17 @@ class ApiObject {
      *                  Note that you don't even need to create a Manager for your entity,
      *                  unless you want to override or add methods.
      * @param string $manager A BaseMgr based class name, null by default. Use only
-     *                  if you don't want to use the "[EntityName]Manager.php" filename structure.
+     *                  if you don't want to use the "[EntityName]Mgr" filename structure.
      */
     public function __construct($name, $commands=null, $enableQuickMethod=false, $manager = "") {
         $this->commands = new ArrayList("ApiCommand");
         $this->name = $name;
         $this->enableQuickMethod = $enableQuickMethod;
-        $this->manager = $manager;
+        if($manager=="") {
+            $this->manager = ucfirst($name)."Mgr";
+        } else {
+            $this->manager = $manager;
+        }
 
         if($commands!=null && is_array($commands)) {
             $this->setCommands($commands);
@@ -74,5 +78,14 @@ class ApiObject {
     public function getCommands()
     {
         return $this->commands->getObjects();
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    public function getCommand($name)
+    {
+        return $this->commands->getObject($name);
     }
 } 

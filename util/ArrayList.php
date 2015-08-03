@@ -86,7 +86,14 @@ class ArrayList {
      */
     public function getObject($name)
     {
-        return $this->objects[$name];
+        $result = null;
+        foreach($this->objects as $object) {
+            if(strtolower($object->getName())==strtolower($name)) {
+                $result = $object;
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -105,34 +112,34 @@ class ArrayList {
      */
     public function setObjects($objects, $checkName=false)
     {
-        echo "setobject<br>";
+        //echo "setobject<br>";
         if(($objects==(null || "")) || (is_array($objects) && count($objects)==0)) {
             $this->objects = array();
-            echo "given data is null<br>";
+            //echo "given data is null<br>";
         }
 
         if(is_array($objects) && count($objects)>0) {
-            echo "given data is a good array<br>";
+            //echo "given data is a good array<br>";
             foreach($objects as $object) {
                 $getName = false;
                 $reflectionClass = new ReflectionClass($object);
                 if($reflectionClass->hasMethod("getName")) {
-                    echo "object in array has getname<br>";
+                    //echo "object in array has getname<br>";
                     $reflectionMethod = new ReflectionMethod($object, "getName");
                     if($reflectionMethod->isPublic()) {
                         $getName = true;
-                        echo "object in array has getname public<br>";
+                        //echo "object in array has getname public<br>";
                     }
                 }
                 if($checkName) {
-                    echo "check name is enabled<br>";
+                    //echo "check name is enabled<br>";
                     if($getName) {
                         $this->addObject($object, $object->getName());
                     } else {
                         $this->addObject($object);
                     }
                 } else {
-                    echo "check is enabled but no getname<br>";
+                    //echo "check is enabled but no getname<br>";
                     $this->addObject($object);
                 }
             }

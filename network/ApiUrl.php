@@ -13,9 +13,61 @@ class ApiUrl {
 	private $port;
 	private $user;
 	private $pass;
-	private $path;
+    private $path;
 	private $query;
 	private $fragment;
+
+    private $apiProject;
+    private $apiObject;
+    private $apiObjectId;
+
+    /**
+     * @return int
+     */
+    public function getApiObjectId()
+    {
+        return $this->apiObjectId;
+    }
+
+    /**
+     * @param int $apiObjectId
+     */
+    public function setApiId($apiObjectId)
+    {
+        $this->apiObjectId = $apiObjectId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiObject()
+    {
+        return $this->apiObject;
+    }
+
+    /**
+     * @param string $apiObject
+     */
+    public function setApiObject($apiObject)
+    {
+        $this->apiObject = $apiObject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiProject()
+    {
+        return $this->apiProject;
+    }
+
+    /**
+     * @param string $apiProject
+     */
+    public function setApiProject($apiProject)
+    {
+        $this->apiProject = $apiProject;
+    }
 
 	public function __construct() {
 		
@@ -100,14 +152,22 @@ class ApiUrl {
 	{
 	    $this->pass = $pass;
 	}
-	
-	/**
-	* @return string
-	*/
-	public function getPath()
-	{
-	    return $this->path;
-	}
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPathArray()
+    {
+        return explode('/', $this->path);
+    }
 	
 	/**
 	* @param string $path
@@ -150,6 +210,11 @@ class ApiUrl {
 	}
 
 
+    /**
+     * Return [scheme]://[host]:[port]
+     * @param bool $use_forwarded_host
+     * @return string
+     */
     public function getOriginUrl($use_forwarded_host=false)
     {
         $s = $_SERVER;
@@ -165,6 +230,11 @@ class ApiUrl {
         return $protocol . '://' . $host;
     }
 
+    /**
+     * Return [scheme]://[host]:[port][path]?[query]#[fragment]
+     * @param bool $use_forwarded_host
+     * @return string
+     */
     public function getFullUrl($use_forwarded_host=false)
     {
         $s = $_SERVER;

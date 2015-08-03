@@ -5,15 +5,29 @@ class ApiResponse {
 
 	/**
 	 * Status of the HTTP response
+     * @type int
 	 */
 	private $status;
+    /**
+     * @type string
+     */
 	private $contentType;
+    /**
+     * @var array
+     */
 	private $body;
 
 	public function __construct() {
-	
+
 	}
-	
+
+    public function setResponseError($status, $message="") {
+        $this->status = $status;
+        if($message!="") {
+            $this->body["api-error"] = $message;
+        }
+    }
+
 	/**
 	* @return int
 	*/
