@@ -1,4 +1,7 @@
 <?php
+
+namespace com\ionxlab\ionxapi\session;
+
 /**
  * User: XION
  * Date: 24/06/2015

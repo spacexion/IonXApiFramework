@@ -1,5 +1,6 @@
 <?php
-require_once realpath(__DIR__."/ApiCommand.php");
+
+namespace com\ionxlab\ionxapi\routes;
 
 /**
  * Class ApiObject

@@ -1,5 +1,6 @@
 <?php
 
+namespace com\ionxlab\ionxapi\network;
 
 class ApiResponse {
 

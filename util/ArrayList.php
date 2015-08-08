@@ -1,5 +1,7 @@
 <?php
 
+namespace com\ionxlab\ionxapi\util;
+
 /**
  * Class ArrayList
  *

@@ -1,5 +1,7 @@
 <?php
 
+namespace com\ionxlab\ionxapi\network;
+
 /**
  * ApiUrl is a class that represents the Url as an object.
  * Structure is as follow:

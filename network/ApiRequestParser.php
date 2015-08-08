@@ -1,7 +1,6 @@
 <?php
 
-require_once realpath(__DIR__."/ApiRequest.php");
-require_once realpath(__DIR__."/ApiCookie.php");
+namespace com\ionxlab\ionxapi\network;
 
 /**
  * ApiRequestParser is a class that allow to parse request data
@@ -107,6 +106,8 @@ class ApiRequestParser {
         if(isset($url["query"])) {
             parse_str($url["query"], $urlQuery);
             $apiUrl->setQuery($urlQuery);
+        } else {
+            $apiUrl->setQuery(array());
         }
         return $apiUrl;
     }

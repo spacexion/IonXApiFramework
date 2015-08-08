@@ -1,8 +1,6 @@
 <?php
-require_once realpath(__DIR__."/../util/ArrayList.php");
-require_once realpath(__DIR__."/ApiProject.php");
-require_once realpath(__DIR__."/ApiObject.php");
-require_once realpath(__DIR__."/ApiCommand.php");
+
+namespace com\ionxlab\ionxapi\routes;
 
 /**
  * Class ApiRoutes

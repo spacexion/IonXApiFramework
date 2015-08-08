@@ -1,5 +1,7 @@
 <?php
 
+namespace com\ionxlab\ionxapi;
+
 require_once realpath(__DIR__."/util/Util.php");
 
 /**

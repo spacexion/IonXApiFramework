@@ -1,18 +1,21 @@
 <?php
-require_once realpath(__DIR__."/Config.php");
-require_once realpath(__DIR__."/util/Util.php");
-require_once realpath(__DIR__."/network/ApiRequest.php");
-require_once realpath(__DIR__."/network/ApiResponse.php");
-require_once realpath(__DIR__."/network/ApiRequestParser.php");
-require_once realpath(__DIR__."/routes/ApiCommand.php");
-require_once realpath(__DIR__."/routes/ApiObject.php");
-require_once realpath(__DIR__."/routes/ApiProject.php");
-require_once realpath(__DIR__."/routes/ApiRoutes.php");
+
+namespace com\ionxlab\ionxapi;
+
+require_once __DIR__."/Config.php";
+require_once __DIR__."/util/Util.php";
+require_once __DIR__."/network/ApiRequest.php";
+require_once __DIR__."/network/ApiResponse.php";
+require_once __DIR__."/network/ApiRequestParser.php";
+require_once __DIR__."/routes/ApiCommand.php";
+require_once __DIR__."/routes/ApiObject.php";
+require_once __DIR__."/routes/ApiProject.php";
+require_once __DIR__."/routes/ApiRoutes.php";
 
 /**
  * IonX Api Framework<br/>
  * This is the main class of this framework.
- * 
+ *
  * @author Nicolas Gezequel
  * @version 0.6.0
  *
@@ -29,12 +32,30 @@ class IonXApi {
     private static $SUPPORTED_HTTP_METHODS = array("POST"=>"post","GET"=>"get","PUT"=>"put","DELETE"=>"delete");
     private static $SUPPORTED_CONTENT_TYPES = array("application/json"=>"json");
 
+    /**
+     * @var ApiRequest
+     */
     private $apiRequest;
+    /**
+     * @var ApiRoutes
+     */
     private $apiRoutes;
+    /**
+     * @var ApiResponse
+     */
     private $apiResponse;
-    
+
+    /**
+     * @var string
+     */
     private $requestProject;
+    /**
+     * @var string
+     */
     private $requestObject;
+    /**
+     * @var string
+     */
     private $requestCommand;
 
 
@@ -270,42 +291,22 @@ class IonXApi {
     }
 
     /**
-     * DEBUG: print useful Request Data
-     */
-    private function printRequest() {
-
-        echo "Method: ".$this->apiRequest->getMethod()."</br>";
-        echo "UserIp: ".$this->apiRequest->getUserIp()."</br>";
-        echo "UserHost: ".$this->apiRequest->getUserHost()."</br>";
-        echo "UserAgent: ".$this->apiRequest->getUserAgent()."</br>";
-        echo "ContentType: ".$this->apiRequest->getContentType()."</br>";
-        echo "Range: ".$this->apiRequest->getRange()."</br>";
-        echo "Auth: ".$this->apiRequest->getAuthorization()."</br>";
-        echo "Url: </br>";
-        echo "<pre>";
-        print_r($this->apiRequest->getUrl());
-        echo "</pre>";
-
-        foreach($this->apiRequest->getCookies() as $cookie) {
-            echo "Cookie: ".$cookie->getName()."</br>";
-        }
-    }
-
-    /**
      * Endpoint, this is the last function to be called
      * It sends the ApiResponse built by previous methods.
      */
     private function sendResponse(){
 
         header("Content-Type: ".$this->apiResponse->getContentType(), true, $this->apiResponse->getStatus());
+
         if(is_array($this->apiResponse->getBody())) {
             echo json_encode($this->apiResponse->getBody());
         } else {
             echo $this->apiResponse->getBody();
         }
-        echo " ";
+
+        exit(0);
     }
-	
+
 }
 
 ?>

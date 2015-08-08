@@ -1,6 +1,6 @@
 <?php
 
-require_once realpath(__DIR__."/ApiUrl.php");
+namespace com\ionxlab\ionxapi\network;
 
 class ApiRequest {
 
