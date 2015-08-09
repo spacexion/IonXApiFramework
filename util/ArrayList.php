@@ -1,6 +1,10 @@
 <?php
 
-namespace com\ionxlab\ionxapi\util;
+namespace IonXApi\util;
+
+use Exception;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Class ArrayList

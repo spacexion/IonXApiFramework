@@ -1,6 +1,6 @@
 <?php
 
-namespace com\ionxlab\ionxapi\network;
+namespace IonXApi\network;
 
 /**
  * ApiCookie is class which represent an HTTP Cookie

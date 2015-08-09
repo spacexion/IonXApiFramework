@@ -1,9 +1,9 @@
 <?php
 
-namespace com\ionxlab\ionxapi\builtin\managers;
+namespace IonXApi\builtin\managers;
 
-use com\ionxlab\ionxapi\builtin\base\BaseMgr;
-use com\ionxlab\ionxapi\builtin\controllers\UserController;
+use IonXApi\builtin\base\BaseMgr;
+use IonXApi\builtin\controllers\UserController;
 
 class UserMgr extends BaseMgr {
 

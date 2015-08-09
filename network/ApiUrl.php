@@ -1,6 +1,6 @@
 <?php
 
-namespace com\ionxlab\ionxapi\network;
+namespace IonXApi\network;
 
 /**
  * ApiUrl is a class that represents the Url as an object.

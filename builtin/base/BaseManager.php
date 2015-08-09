@@ -1,6 +1,6 @@
 <?php
 
-namespace com\ionxlab\ionxapi\builtin\base;
+namespace IonXApi\builtin\base;
 
 /**
  * The Base Class for API Managers

@@ -3,6 +3,7 @@
     "vendor-dir": "../vendor"
   },
   "require": {
-    "doctrine/orm": "*"
+    "doctrine/orm": "*",
+    "symfony/class-loader": "*"
   }
 }

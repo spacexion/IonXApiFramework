@@ -1,6 +1,7 @@
 <?php
 
-namespace com\ionxlab\ionxapi\network;
+namespace IonXApi\network;
+use IonXApi\Config;
 
 /**
  * ApiRequestParser is a class that allow to parse request data

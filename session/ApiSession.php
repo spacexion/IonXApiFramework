@@ -1,6 +1,6 @@
 <?php
 
-namespace com\ionxlab\ionxapi\session;
+namespace IonXApi\session;
 
 /**
  * User: XION

@@ -1,6 +1,6 @@
 <?php
 
-namespace com\ionxlab\ionxapi;
+namespace IonXApi;
 
 require_once realpath(__DIR__."/Config.php");
 require_once realpath(__DIR__."/vendor/autoload.php");

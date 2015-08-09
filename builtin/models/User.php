@@ -1,8 +1,8 @@
 <?php
 
-namespace com\ionxlab\ionxapi\builtin\models;
+namespace IonXApi\builtin\models;
 
-use com\ionxlab\ionxapi\builtin\base\BaseModel;
+use IonXApi\builtin\base\BaseModel;
 
 /**
  * @Entity @Table(name="users")

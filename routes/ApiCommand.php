@@ -1,6 +1,7 @@
 <?php
 
-namespace com\ionxlab\ionxapi\routes;
+namespace IonXApi\routes;
+use Exception;
 
 /**
  * Class ApiCommand

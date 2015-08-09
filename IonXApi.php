@@ -1,16 +1,14 @@
 <?php
+namespace IonXApi;
 
-namespace com\ionxlab\ionxapi;
+use IonXApi\network\ApiRequest;
+use IonXApi\network\ApiRequestParser;
+use IonXApi\network\ApiResponse;
+use IonXApi\routes\ApiRoutes;
+use IonXApi\util\Util;
+use ReflectionMethod;
 
-require_once __DIR__."/Config.php";
-require_once __DIR__."/util/Util.php";
-require_once __DIR__."/network/ApiRequest.php";
-require_once __DIR__."/network/ApiResponse.php";
-require_once __DIR__."/network/ApiRequestParser.php";
-require_once __DIR__."/routes/ApiCommand.php";
-require_once __DIR__."/routes/ApiObject.php";
-require_once __DIR__."/routes/ApiProject.php";
-require_once __DIR__."/routes/ApiRoutes.php";
+require_once __DIR__."/AutoLoad.php";
 
 /**
  * IonX Api Framework<br/>
@@ -100,6 +98,9 @@ class IonXApi {
      */
     private function isValidApiRoutes() {
 
+        echo "<pre>";
+        \print_r($this->apiRoutes);
+        echo "</pre>";
         return true;
     }
 
@@ -130,13 +131,13 @@ class IonXApi {
 
         // check if requested project exists in routes
         if($this->apiRoutes->getProject($this->requestProject)==null) {
-            $this->apiResponse->setResponseError(400, "Sorry, given project doesn't exists in routes.");
+            $this->apiResponse->setResponseError(400, "Sorry, given project ('".$this->requestProject."') doesn't exists in routes.");
             return false;
         }
 
         // check if requested project exists in folder
         if(!Util::file_exists_ci(Config::$pathProjects.$this->requestProject)) {
-            $this->apiResponse->setResponseError(400, "Sorry, the given project doesn't exists.");
+            $this->apiResponse->setResponseError(400, "Sorry, the given project ('".$this->requestProject."') doesn't exists.");
             return false;
         }
 

@@ -1,8 +1,10 @@
 <?php
 
-namespace com\ionxlab\ionxapi;
+namespace IonXApi;
 
-require_once realpath(__DIR__."/util/Util.php");
+use IonXApi\util\Util;
+
+require_once __DIR__."/util/Util.php";
 
 /**
  * Global Configuration
