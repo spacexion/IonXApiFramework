@@ -1,0 +1,17 @@
+{
+  "repositories": [
+    {
+      "url": "https://github.com/spacexion/JacksonPhp.git",
+      "type": "git"
+    }
+  ],
+  "config": {
+    "vendor-dir": "../vendor"
+  },
+  "require": {
+    "doctrine/orm": "*",
+    "symfony/class-loader": "*",
+    "hashids/hashids": "1.0.5",
+    "ionxlab/jacksonphp": "dev-master"
+  }
+}

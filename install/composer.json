@@ -1,9 +1,0 @@
-{
-  "config": {
-    "vendor-dir": "../vendor"
-  },
-  "require": {
-    "doctrine/orm": "*",
-    "symfony/class-loader": "*"
-  }
-}
