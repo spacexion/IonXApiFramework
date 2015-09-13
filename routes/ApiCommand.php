@@ -1,6 +1,6 @@
 <?php
 
-namespace IonXApi\routes;
+namespace IonXLab\IonXApi\routes;
 use Exception;
 
 /**

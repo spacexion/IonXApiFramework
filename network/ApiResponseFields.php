@@ -1,6 +1,6 @@
 <?php
 
-namespace IonXApi\network;
+namespace IonXLab\IonXApi\network;
 
 class ApiResponseFields {
 

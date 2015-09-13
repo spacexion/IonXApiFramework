@@ -1,12 +1,12 @@
 <?php
-namespace IonXApi;
+namespace IonXLab\IonXApi;
 
-use IonXApi\network\ApiRequest;
-use IonXApi\network\ApiRequestParser;
-use IonXApi\network\ApiResponse;
-use IonXApi\routes\ApiRoutes;
-use IonXApi\util\EntityMgr;
-use IonXApi\util\Util;
+use IonXLab\IonXApi\network\ApiRequest;
+use IonXLab\IonXApi\network\ApiRequestParser;
+use IonXLab\IonXApi\network\ApiResponse;
+use IonXLab\IonXApi\routes\ApiRoutes;
+use IonXLab\IonXApi\util\EntityMgr;
+use IonXLab\IonXApi\util\Util;
 use ReflectionMethod;
 
 IonXApi::$autoloader = require_once __DIR__."/util/AutoLoad.php";

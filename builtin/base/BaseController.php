@@ -1,7 +1,7 @@
 <?php
 
-namespace IonXApi\builtin\base;
-use IonXApi\util\EntityMgr;
+namespace IonXLab\IonXApi\builtin\base;
+use IonXLab\IonXApi\util\EntityMgr;
 use IonXLab\JacksonPhp\databind\ObjectParser;
 
 /**

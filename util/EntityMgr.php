@@ -1,10 +1,10 @@
 <?php
 
-namespace IonXApi\util;
+namespace IonXLab\IonXApi\util;
 
 require_once __DIR__."/AutoLoad.php";
 
-use IonXApi\Config;
+use IonXLab\IonXApi\Config;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 

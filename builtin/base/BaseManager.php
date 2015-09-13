@@ -1,7 +1,7 @@
 <?php
 
-namespace IonXApi\builtin\base;
-use IonXApi\network\ApiResponse;
+namespace IonXLab\IonXApi\builtin\base;
+use IonXLab\IonXApi\network\ApiResponse;
 use IonXLab\JacksonPhp\databind\ObjectMapper;
 
 /**

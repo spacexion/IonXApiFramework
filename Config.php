@@ -1,8 +1,8 @@
 <?php
 
-namespace IonXApi;
+namespace IonXLab\IonXApi;
 
-use IonXApi\util\Util;
+use IonXLab\IonXApi\util\Util;
 
 require_once __DIR__."/util/Util.php";
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace IonXApi\builtin\base;
+namespace IonXLab\IonXApi\builtin\base;
 
 /**
  * The Base Class for API Models

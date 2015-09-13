@@ -1,8 +1,8 @@
 <?php
 
-namespace IonXApi\builtin\models;
+namespace IonXLab\IonXApi\builtin\models;
 
-use IonXApi\builtin\base\BaseModel;
+use IonXLab\IonXApi\builtin\base\BaseModel;
 
 /**
  * @Entity

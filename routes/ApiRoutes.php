@@ -1,7 +1,7 @@
 <?php
 
-namespace IonXApi\routes;
-use IonXApi\util\ArrayCollection;
+namespace IonXLab\IonXApi\routes;
+use IonXLab\IonXApi\util\ArrayCollection;
 
 /**
  * Class ApiRoutes

@@ -1,6 +1,6 @@
 <?php
 
-namespace IonXApi\util;
+namespace IonXLab\IonXApi\util;
 
 use Exception;
 

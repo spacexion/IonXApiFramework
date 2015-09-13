@@ -1,10 +1,10 @@
 <?php
 
-namespace IonXApi\builtin\controllers;
+namespace IonXLab\IonXApi\builtin\controllers;
 
-use IonXApi\builtin\base\BaseController;
-use IonXApi\builtin\models\User;
-use IonXApi\EntityMgr;
+use IonXLab\IonXApi\builtin\base\BaseController;
+use IonXLab\IonXApi\builtin\models\User;
+use IonXLab\IonXApi\EntityMgr;
 
 class UserController extends BaseController {
 
