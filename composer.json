@@ -1,13 +1,23 @@
 {
+  "name": "ionxlab/ionxapi",
+  "type": "project",
+  "description": "IonXApi is a framework that allows to create api quickly and efficiently in Php with JacksonPhp as Object/JSON mapper and Doctrine as ORM.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Spacexion",
+      "email": "xion-teamionx@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "IonXLab\\IonXApi\\": "./" }
+  },
   "repositories": [
     {
       "url": "https://github.com/spacexion/JacksonPhp.git",
       "type": "git"
     }
   ],
-  "config": {
-    "vendor-dir": "../vendor"
-  },
   "require": {
     "doctrine/orm": "*",
     "symfony/class-loader": "*",

@@ -17,10 +17,25 @@ class ApiResponse {
      * @var array
      */
 	private $body;
+    /**
+     * @var \IonXApi\network\ApiResponse
+     */
+    private static $instance = null;
 
-	public function __construct() {
 
+    private function __construct() {
 	}
+
+    /**
+     * Return current or new ApiResponse instance
+     * @return ApiResponse
+     */
+    public static function getInstance() {
+        if (is_null(self::$instance)) {
+            self::$instance = new ApiResponse();
+        }
+        return self::$instance;
+    }
 
     public function setResponseError($status, $message="") {
         $this->status = $status;

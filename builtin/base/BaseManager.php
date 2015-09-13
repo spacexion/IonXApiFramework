@@ -1,19 +1,29 @@
 <?php
 
 namespace IonXApi\builtin\base;
+use IonXApi\network\ApiResponse;
+use IonXLab\JacksonPhp\databind\ObjectMapper;
 
 /**
  * The Base Class for API Managers
  * @author Nicolas Gezequel
  */
-class BaseMgr
-{
+class BaseMgr {
 
+    /**
+     * @var string the controller class name
+     */
     protected $controller;
+    /**
+     * @var string the managed object name
+     */
     protected $entityName;
 
-    public function __construct($entityName, $controller)
-    {
+    /**
+     * @param $entityName string the controller class name
+     * @param $controller string the managed object name
+     */
+    public function __construct($entityName, $controller) {
         $this->entityName = $entityName;
         $this->controller = $controller;
     }
@@ -24,19 +34,23 @@ class BaseMgr
      * @param string $controllerMethod
      * @return boolean success
      */
-    protected function postObject($json, $controllerMethod = "create")
-    {
+    protected function postObject($json, $controllerMethod = "create") {
         $objectJson = json_decode($json);
-        $mapper = new JsonMapper();
-        $object = $mapper->map($objectJson, new $this->entityName());
+        $mapper = new ObjectMapper();
+        $object = $mapper->readValue($objectJson, new $this->entityName());
+
+        if($object==null) {
+            ApiResponse::getInstance()->setResponseError(404);
+            return false;
+        }
 
         $newObject = $this->controller->$controllerMethod($object);
 
         if ($newObject == null) {
-            ApiHttpResponse::setHttpStatusCode(409);
+            ApiResponse::getInstance()->setResponseError(409);
             return false;
         } else {
-            ApiHttpResponse::setContent(json_encode($newObject->toArray()));
+            ApiResponse::getInstance()->setBody($mapper->writeValue($newObject));
             return true;
         }
     }
@@ -47,15 +61,14 @@ class BaseMgr
      * @param string $controllerMethod
      * @return boolean success
      */
-    protected function getObject($id, $controllerMethod = "read")
-    {
+    protected function getObject($id, $controllerMethod = "read") {
         $object = $this->controller->$controllerMethod($id);
 
         if ($object == null) {
-            ApiHttpResponse::setHttpStatusCode(404);
+            ApiResponse::getInstance()->setResponseError(404);
             return false;
         } else {
-            ApiHttpResponse::setContent(json_encode($object->toArray()));
+            ApiResponse::getInstance()->setBody((new ObjectMapper())->writeValue($object));
             return true;
         }
     }
@@ -67,23 +80,20 @@ class BaseMgr
      * @param string $sort
      * @param string $query
      * @param string $controllerMethod
-     * @internal param the $int limit
-     * @internal param the $int offset
-     * @internal param the $string orderby (-name)
-     * @internal param the $string where clause
      * @return boolean success
      */
-    protected function getObjects($limit = 50, $offset = 0, $sort = "", $query = "", $controllerMethod = "reads")
-    {
+    protected function getObjects($limit = 50, $offset = 0, $sort = "", $query = "", $controllerMethod = "reads") {
         $objects = $this->controller->$controllerMethod($limit, $offset, $sort, $query);
         if ($objects == null) {
-            ApiHttpResponse::setHttpStatusCode(404);
+            ApiResponse::getInstance()->setResponseError(404);
             return false;
         } else {
-            foreach ($objects as $value) {
-                $array[] = $value->toArray();
+            $mapper = new ObjectMapper();
+            $array = array();
+            foreach ($objects as $object) {
+                $array[] = $mapper->writeValue($object);
             }
-            ApiHttpResponse::setContent(json_encode($array));
+            ApiResponse::getInstance()->setBody(json_encode($array));
             return true;
         }
     }
@@ -93,47 +103,46 @@ class BaseMgr
      * @param $id
      * @param $json
      * @param string $controllerMethod
-     * @param bool $checkEmptyVars
+     * @return bool success
+     * @internal param bool $checkEmptyVars
      * @internal param String $Json the received Json Data String
-     * @return boolean success
      */
-    protected function putObject($id, $json, $controllerMethod = "update", $checkEmptyVars = true)
-    {
+    protected function putObject($id, $json, $controllerMethod = "update") {
         $objectJson = json_decode($json);
-        $mapper = new JsonMapper();
-        $object = $mapper->map($objectJson, new $this->entityName());
+        $mapper = new ObjectMapper();
+        $object = $mapper->readValue($objectJson, new $this->entityName());
         $object->setId($id);
 
         $newObject = $this->controller->$controllerMethod($object);
         if ($newObject == null) {
-            ApiHttpResponse::setHttpStatusCode(404);
+            ApiResponse::getInstance()->setResponseError(404);
             return false;
         } else {
-            ApiHttpResponse::setContent(json_encode($newObject->toArray()));
+            ApiResponse::getInstance()->setBody((new ObjectMapper())->writeValue($object));
             return true;
         }
     }
 
     /**
      * DELETE an Object
-     * @param int the object id
-     * @return boolean success
+     * @param int $id the object id
+     * @param string $controllerMethod the controllerMethod name to use
+     * @return bool success
      */
-    protected function deleteObject($id, $controllerMethod = "delete")
-    {
+    protected function deleteObject($id, $controllerMethod = "delete") {
         $result = $this->controller->$controllerMethod($id);
 
         switch ($result) {
             case 0:
-                ApiHttpResponse::setHttpStatusCode(200);
+                ApiResponse::getInstance()->setResponseError(200);
                 return true;
                 break;
             case 1:
-                ApiHttpResponse::setHttpStatusCode(404);
+                ApiResponse::getInstance()->setResponseError(404);
                 return false;
                 break;
             case 2:
-                ApiHttpResponse::setHttpStatusCode(500);
+                ApiResponse::getInstance()->setResponseError(500);
                 return false;
                 break;
             default:
@@ -141,7 +150,6 @@ class BaseMgr
                 break;
         }
     }
-
 }
 
 ?>

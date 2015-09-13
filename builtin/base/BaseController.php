@@ -1,10 +1,12 @@
 <?php
 
 namespace IonXApi\builtin\base;
+use IonXApi\util\EntityMgr;
+use IonXLab\JacksonPhp\databind\ObjectParser;
 
 /**
  * The Base Class for API Controllers
- * @author Nicolas G�z�quel
+ * @author Nicolas Gézéquel
  */
 class BaseController {
 
@@ -98,9 +100,10 @@ class BaseController {
     }
 
     /**
-     * Update array(Object) informations
-     * @param array(Object) $object the objects to update
-     * @return array(Object) or NULL
+     * Update array of Object values
+     * @param Object[] $objects the objects to update
+     * @param bool $checkEmptyVars check if vars in object are empty
+     * @return NULL|Object[]
      */
     public function updates($objects, $checkEmptyVars = false) {
         if (is_array($objects)) {
@@ -109,10 +112,10 @@ class BaseController {
                 $objectDB = $this->read($object->getId());
                 if ($objectDB != null) {
                     if ($checkEmptyVars) {
-                        foreach ($object->toArray() as $var => $value) {
-                            if ($value == null) {
-                                $set = "set" . ucfirst($var);
-                                $get = "get" . ucfirst($var);
+                        foreach ((new ObjectParser())->parseObject($object) as $var) {
+                            if ($var->getValue() == null) {
+                                $set = $var->getSetter();
+                                $get = $var->getGetter();
                                 $object->$set($objectDB->$get());
                             }
                         }
@@ -125,7 +128,7 @@ class BaseController {
                 }
             }
             if (count($result) > 0) {
-                return $response;
+                return $result;
             }
         }
         return null;
@@ -134,7 +137,7 @@ class BaseController {
     /**
      * Delete Object
      * @param int $id the object id to delete
-     * @return 0:success, 1:not found, 2:fail
+     * @return int 0:success, 1:not found, 2:fail
      */
     public function delete($id) {
         $object = $this->read($id);

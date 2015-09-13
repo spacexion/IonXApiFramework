@@ -5,8 +5,9 @@ namespace IonXApi\builtin\models;
 use IonXApi\builtin\base\BaseModel;
 
 /**
- * @Entity @Table(name="users")
- * */
+ * @Entity
+ * @Table(name="users")
+ **/
 class User extends BaseModel {
 
     /**

@@ -62,10 +62,7 @@ class Util {
      * @return bool
      */
     public static function isGoodString($string) {
-        if(is_string($string) && strlen($string)!=0) {
-            return true;
-        }
-        return false;
+        return (!is_null($string) && is_string($string) && strlen($string)!=0);
     }
 
     /**

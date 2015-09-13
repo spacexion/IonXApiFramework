@@ -1,14 +1,12 @@
 <?php
 
 namespace IonXApi\routes;
-
-use IonXApi\util\ArrayList;
+use IonXApi\util\ArrayCollection;
 
 /**
  * Class ApiObject
  *
  * Allows to define the routes for an api object
- * It's basically a wrapper for an array of ApiCommand
  */
 class ApiObject {
 
@@ -28,67 +26,65 @@ class ApiObject {
      * @param string $manager A BaseMgr based class name, null by default. Use only
      *                  if you don't want to use the "[EntityName]Mgr" filename structure.
      */
-    public function __construct($name, $commands=null, $enableQuickMethod=false, $manager = "") {
-        $this->commands = new ArrayList("ApiCommand");
+    public function __construct($name, $commands=null, $enableQuickMethod=false, $manager=null) {
+        $this->commands = new ArrayCollection("IonXApi\\routes\\ApiCommand");
         $this->name = $name;
         $this->enableQuickMethod = $enableQuickMethod;
-        if($manager=="") {
-            $this->manager = ucfirst($name)."Mgr";
+
+        if(is_null($manager)) {
+            $this->manager = ucfirst(strtolower($name))."Mgr";
         } else {
             $this->manager = $manager;
         }
 
-        if($commands!=null && is_array($commands)) {
-            $this->setCommands($commands);
-        }
+        $this->setCommands($commands);
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
     /**
      * @return string
      */
-    public function getManager()
-    {
+    public function getManager() {
         return $this->manager;
     }
 
     /**
      * @return boolean
      */
-    public function isEnableQuickMethod()
-    {
+    public function isQuickMethodEnabled() {
         return $this->enableQuickMethod;
-    }
-
-    /**
-     * @param $commands
-     */
-    public function setCommands($commands)
-    {
-        $this->commands->setObjects($commands);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCommands()
-    {
-        return $this->commands->getObjects();
     }
 
     /**
      * @param $name
      * @return string
      */
-    public function getCommand($name)
-    {
-        return $this->commands->getObject($name);
+    public function getCommand($name) {
+        return $this->commands->get($name);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCommands() {
+        return $this->commands;
+    }
+
+    /**
+     * @param ApiCommand[] $commands
+     */
+    public function setCommands($commands) {
+
+        if(!is_null($commands) && is_array($commands)) {
+            foreach($commands as $command) {
+                $this->commands->addAt($command->getName(), $command);
+            }
+        }
     }
 } 

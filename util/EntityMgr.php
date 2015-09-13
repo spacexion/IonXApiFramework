@@ -1,8 +1,8 @@
 <?php
 
-namespace IonXApi;
+namespace IonXApi\util;
 
-require_once __DIR__."/Autoload.php";
+require_once __DIR__."/AutoLoad.php";
 
 use IonXApi\Config;
 use Doctrine\ORM\Tools\Setup;
@@ -10,6 +10,9 @@ use Doctrine\ORM\EntityManager;
 
 class EntityMgr {
 
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     public static $entityManager;
 
     public static function _init() {
@@ -27,9 +30,12 @@ class EntityMgr {
             'port' => Config::$sqlPort,
         );
 
-        $config = Setup::createAnnotationMetadataConfiguration(Config::$pathsModels, $isDevMode);
-        $config->setProxyDir(realpath(__DIR__."/vendor/doctrine/proxy/"));
-        $config->setProxyNamespace('IonxLab\Proxies');
+        $config = Setup::createAnnotationMetadataConfiguration(
+            array(Config::$folderNameModels),
+            $isDevMode);
+
+        $config->setProxyDir(realpath(__DIR__."/../vendor/doctrine/proxy/"));
+        $config->setProxyNamespace('IonXApi\Proxies');
 
         self::$entityManager = EntityManager::create($dbParams, $config);
     }

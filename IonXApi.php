@@ -5,10 +5,11 @@ use IonXApi\network\ApiRequest;
 use IonXApi\network\ApiRequestParser;
 use IonXApi\network\ApiResponse;
 use IonXApi\routes\ApiRoutes;
+use IonXApi\util\EntityMgr;
 use IonXApi\util\Util;
 use ReflectionMethod;
 
-require_once __DIR__."/AutoLoad.php";
+IonXApi::$autoloader = require_once __DIR__."/util/AutoLoad.php";
 
 /**
  * IonX Api Framework<br/>
@@ -29,6 +30,11 @@ class IonXApi {
 
     private static $SUPPORTED_HTTP_METHODS = array("POST"=>"post","GET"=>"get","PUT"=>"put","DELETE"=>"delete");
     private static $SUPPORTED_CONTENT_TYPES = array("application/json"=>"json");
+
+    /**
+     * @var \Composer\Autoload\ClassLoader
+     */
+    public static $autoloader;
 
     /**
      * @var ApiRequest
@@ -64,7 +70,7 @@ class IonXApi {
 
         $this->apiRoutes = $routes;
 
-        $this->apiResponse = new ApiResponse();
+        $this->apiResponse = ApiResponse::getInstance();
         $this->apiResponse->setContentType("application/json");
         $this->apiResponse->setStatus(200);
 
@@ -98,9 +104,6 @@ class IonXApi {
      */
     private function isValidApiRoutes() {
 
-        echo "<pre>";
-        \print_r($this->apiRoutes);
-        echo "</pre>";
         return true;
     }
 
@@ -150,15 +153,15 @@ class IonXApi {
         // check if requested object exists in folder and include it
         $objectPath = Util::buildPath(Config::$pathProjects, $this->requestProject, Config::$folderNameModels, $this->requestObject.".php");
         if(($objectPath = Util::file_exists_ci($objectPath)) === false) {
-            $this->apiResponse->setResponseError(400, "Sorry, the given object doesn't exists.");
+            $this->apiResponse->setResponseError(400, "Sorry, the given object class file doesn't exists.");
             return false;
         } else {
             require_once $objectPath;
         }
 
         // Check if request object class is accessible
-        if(!class_exists($this->requestObject)) {
-            $this->apiResponse->setResponseError(500, "Sorry, there is an error with given object class.");
+        if(!class_exists('\\'.Config::$appNamespace."\\projects\\".$this->requestProject."\\".$this->requestObject)) {
+            $this->apiResponse->setResponseError(500, "Sorry, the object class is not reachable.");
             return false;
         }
 
@@ -197,7 +200,7 @@ class IonXApi {
         if(Util::isGoodString($this->apiRoutes->getProject($this->requestProject)
                 ->getObject($this->requestObject)->getCommand($this->requestCommand))
             && !$this->apiRoutes->getProject($this->requestProject)
-                ->getObject($this->requestObject)->isEnableQuickMethod()) {
+                ->getObject($this->requestObject)->isQuickMethodEnabled()) {
             $this->apiResponse->setResponseError(400, "Sorry, given object hasn't any suitable method for this action in routes.");
             return false;
         }
@@ -308,6 +311,13 @@ class IonXApi {
         exit(0);
     }
 
+    /**
+     * @return \Symfony\Component\Console\Helper\HelperSet
+     */
+    public function getCli() {
+
+        return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(EntityMgr::$entityManager);
+    }
 }
 
 ?>

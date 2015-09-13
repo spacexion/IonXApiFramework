@@ -4,7 +4,7 @@ namespace IonXApi\builtin\base;
 
 /**
  * The Base Class for API Models
- * @author Nicolas Gezequel
+ * @author Nicolas Gézéquel
  */
 class BaseModel {
 

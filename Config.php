@@ -15,6 +15,11 @@ class Config {
      * @var bool If is Config::__construct() has been called
      */
     private static $constructed = false;
+
+    /**
+     * @var string the namespace of the user application
+     */
+    public static $appNamespace;
     /**
      * @var string The username of the SQL Server Connection
      */
@@ -64,6 +69,7 @@ class Config {
 
     /**
      * Construct the config file with all parameters
+     * @param string $appNamespace The user app Namespace
      * @param string $sqlUser The username of the sql connection
      * @param string $sqlPass The password of the sql connection
      * @param string $sqlHost The host of the sql connection
@@ -77,6 +83,7 @@ class Config {
      * @param string $folderNameManagers The folder name where managers are stored (must be the same in all projects)
      */
     public static function _construct(
+            $appNamespace,
             $sqlUser,
             $sqlPass,
             $sqlHost,
@@ -89,6 +96,9 @@ class Config {
             $folderNameModels = "",
             $folderNameManagers = "") {
 
+        if(Util::isGoodString($appNamespace)) {
+            self::$appNamespace = $appNamespace;
+        }
         if(Util::isGoodString($sqlUser)) {
             self::$sqlUser = $sqlUser;
         }
@@ -130,7 +140,8 @@ class Config {
      */
     public static function _init() {
 
-    	self::$sqlUser = "root";
+        self::$appNamespace = "IonXApiApp";
+        self::$sqlUser = "root";
     	self::$sqlPass = "";
     	self::$sqlHost = "127.0.0.1";
     	self::$sqlPort = 3306;
@@ -150,6 +161,20 @@ class Config {
      */
     public static function isConstructed(){
         return self::$constructed;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isOSLinux() {
+        return is_int(strpos(strtolower(php_uname('s')), "linux", 0));
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isOSWindows() {
+        return is_int(strpos(strtolower(php_uname('s')), "win", 0));
     }
 }
 Config::_init();

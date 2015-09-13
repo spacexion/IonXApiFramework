@@ -1,62 +1,67 @@
 <?php
 
 namespace IonXApi\routes;
-use IonXApi\util\ArrayList;
+use IonXApi\util\ArrayCollection;
 
 /**
  * Class ApiRoutes
  *
  * Allow to quickly define root routes
- * It's basically an ArrayList of ApiProject
  */
 class ApiRoutes {
 
+    /**
+     * @var ArrayCollection
+     */
     private $projects;
 
+    /**
+     * @param ApiProject[] $projects=null
+     */
     public function __construct($projects=null) {
-        $this->projects = new ArrayList("ApiProject");
-        if($projects!=null && is_array($projects)) {
-            $this->setProjects($projects);
-        }
+        $this->projects = new ArrayCollection("IonXApi\\routes\\ApiProject");
+        $this->setProjects($projects);
     }
 
     /**
+     * @param string $projectName
      * @param ApiProject $project
      */
-    public function addProject($project) {
-        $this->projects->addObject($project, $project->getName());
+    public function addProject($projectName, $project) {
+        $this->projects->addAt($projectName, $project);
     }
 
     /**
      * @param string $name
      */
     public function delProject($name) {
-        $this->projects->delObject($name);
+        $this->projects->remove($name);
     }
 
     /**
      * @param string $name
      * @return ApiProject
      */
-    public function getProject($name)
-    {
-        return $this->projects->getObject($name);
+    public function getProject($name) {
+        return $this->projects->get($name);
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getProjects()
-    {
-        return $this->projects->getObjects();
+    public function getProjects() {
+        return $this->projects;
     }
 
     /**
-     * @param array $projects
+     * @param ApiProject[] $projects
      */
-    public function setProjects($projects)
-    {
-        $this->projects->setObjects($projects, true);
+    public function setProjects($projects) {
+        if(!is_null($projects) && is_array($projects)) {
+            foreach($projects as $project) {
+                $this->projects->addAt($project->getName(), $project);
+            }
+        }
     }
 }
 

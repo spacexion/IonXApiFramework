@@ -10,8 +10,8 @@ use Exception;
  */
 class ApiCommand {
 
-    private $managerMethod = "";
-    private $requestMethod = "";
+    private $managerMethod;
+    private $requestMethod;
     private $requestContentType = "application/json";
     private $responseContentType = "application/json";
     private $authenticationLevel = 0;
@@ -32,101 +32,54 @@ class ApiCommand {
         $this->managerMethod = $managerMethod;
         if($requestMethod != ("POST" || "GET" || "PUT" || "DELETE")) {
             throw new Exception("Given request method is not supported.");
+        } else {
+            $this->requestMethod = $requestMethod;
         }
-        $this->requestMethod = $requestMethod;
-        $this->authenticationLevel = $authenticationLevel;
+        $this->authenticationLevel = (is_int($authenticationLevel) ? $authenticationLevel : 0);
+
+        $this->requestContentType = (is_string($requestContentType) ? $requestContentType : "application/json");
+        $this->responseContentType = (is_string($responseContentType) ? $responseContentType : "application/json");
     }
 
     /**
      * @return int
      */
-    public function getAuthenticationLevel()
-    {
+    public function getAuthenticationLevel() {
         return $this->authenticationLevel;
     }
 
     /**
-     * @param int $authenticationLevel
-     */
-    public function setAuthenticationLevel($authenticationLevel)
-    {
-        $this->authenticationLevel = $authenticationLevel;
-    }
-
-    /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->managerMethod;
     }
 
     /**
      * @return string
      */
-    public function getManagerMethod()
-    {
+    public function getManagerMethod() {
         return $this->managerMethod;
-    }
-
-    /**
-     * @param string $managerMethod
-     */
-    public function setManagerMethod($managerMethod)
-    {
-        $this->managerMethod = $managerMethod;
     }
 
     /**
      * @return string
      */
-    public function getRequestContentType()
-    {
+    public function getRequestContentType() {
         return $this->requestContentType;
     }
 
     /**
-     * @param string $requestContentType
-     */
-    public function setRequestContentType($requestContentType)
-    {
-        $this->requestContentType = $requestContentType;
-    }
-
-    /**
      * @return string
      */
-    public function getRequestMethod()
-    {
+    public function getRequestMethod() {
         return $this->requestMethod;
     }
 
     /**
-     * @param string $requestMethod
-     */
-    public function setRequestMethod($requestMethod)
-    {
-        $this->requestMethod = $requestMethod;
-    }
-
-    /**
      * @return string
      */
-    public function getResponseContentType()
-    {
+    public function getResponseContentType() {
         return $this->responseContentType;
-    }
-
-    /**
-     * @param string $responseContentType
-     */
-    public function setResponseContentType($responseContentType)
-    {
-        $this->responseContentType = $responseContentType;
-    }
-
-    public function setProjects($projects)
-    {
-        $this->projects->setObjects($projects);
     }
 } 
