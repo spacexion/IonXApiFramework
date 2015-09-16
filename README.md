@@ -1,23 +1,31 @@
 # IonXApiFramework
 
 IonXApiFramework is a Php framework created to help you build secured and flexible api for your projects.
-It's built above doctrine for database management and another project of mine JacksonPhp for Json>Object mapping.
+It's built on top of doctrine for database management and another project of mine: JacksonPhp, for Json>Object mapping.
 
 
 It's a framework thought to be simple, very much like Express for JavaScript (still I try :)).
 
+Be gentle it's still a Work In Progress, it has many bugs and optimization issues but i'm working on it :)
 
-You set the config parameters, create a route object tree, and call "new IonXApi(route)".
-In fact you also have to create .htaccess to relay request to your main file, create entities, controllers and managers from existing class. But it's faster than you think :)
+If you want to try it, you can download it with composer, just put this in a composer.json :
 
-And don't forget to call cli-config to update your database scheme !
+```
+{
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/spacexion/IonXApiFramework.git"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/spacexion/JacksonPhp.git"
+    }
+  ],
+  "require": {
+    "ionxlab/jacksonphp": "dev-master",
+    "ionxlab/ionxapi": "dev-master"
+  }
+}
+```
 
-
-You need to download doctrine in the /vendor/ folder to be able to use this library.
-
-You also need to download another project of mine: JacksonPhp which is not public yet, so please be patient, it will come soon.
-
-
-In fact right now this project is not ready, it's a big rethinking of an old project and it's currently WIP, so I'm sorry but you can't use it for now.
-
-I will finish my restructuration as fast as my planning allows it :)
