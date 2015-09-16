@@ -29,3 +29,10 @@ If you want to try it, you can download it with composer, just put this in a com
 }
 ```
 
+And use the example in example/www folder (still wip remember ?)
+Modify the config.php file in the example to suits your parameters (mostly sql connection info) and ensure that the specified database name exists.
+
+After that, in a terminal, cd to api folder and type :
+    php ../vendor/bin/doctrine orm:schema-tool:create
+
+While isDevMode is set to true in config, Doctrine generate proxies automatically and IonXApi::updateSchema() is constantly called.
