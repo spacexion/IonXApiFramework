@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+
+	RewriteRule ^api/ api/api.php [L]
+
+	RewriteCond ${REQUEST_URI} !^api/
+	RewriteRule ^(/)?$ web [L]
+</IfModule>
+
+<IfModule mod_rewrite.so>
+	RewriteEngine on
+
+	RewriteRule ^api/ api/api.php [L]
+
+	RewriteCond ${REQUEST_URI} !^api/
+	RewriteRule ^(/)?$ web [L]
+</IfModule>
