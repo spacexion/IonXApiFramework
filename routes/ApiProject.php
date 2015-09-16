@@ -20,7 +20,7 @@ class ApiProject {
     private $name;
 
     public function __construct($name, $objects=null) {
-        $this->objects = new ArrayCollection("IonXApi\\routes\\ApiObject");
+        $this->objects = new ArrayCollection("IonXLab\\IonXApi\\routes\\ApiObject");
         $this->name = $name;
 
         $this->setObjects($objects);

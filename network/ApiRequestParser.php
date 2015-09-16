@@ -90,7 +90,7 @@ class ApiRequestParser {
 
         if(isset($url["path"])) {
             $path = $url["path"];
-            $path = trim(str_replace(Config::$uriApi, "", trim($path, '/')), '/');
+            $path = trim(str_replace(Config::getInstance()->getUriApi(), "", trim($path, '/')), '/');
             $pathArray = explode('/', $path);
 
             if(isset($pathArray[0])) {

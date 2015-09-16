@@ -25,13 +25,19 @@ class ArrayCollection {
      * and any class name if it has been included before execution <br>
      */
     private $type;
+    /**
+     * @var array
+     */
     private $elements;
+    /**
+     * @var bool
+     */
     private $keepKeyCase;
 
     /**
      * @param string $type ("boolean"|"integer"|"double"|"string"|"array"|"MyClassName")
      * @param bool $keepKeyCase=false
-     * @param $elements=null
+     * @param mixed[] $elements=null
      * @throws Exception
      */
     public function __construct($type, $keepKeyCase=false, $elements=null) {

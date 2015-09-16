@@ -2,8 +2,6 @@
 
 namespace IonXLab\IonXApi\util;
 
-require_once __DIR__."/AutoLoad.php";
-
 use IonXLab\IonXApi\Config;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
@@ -15,26 +13,39 @@ class EntityMgr {
      */
     public static $entityManager;
 
+    public function __construct() {
+        self::_init();
+    }
+
     public static function _init() {
 
-        // Prod or Release Environment
-        $isDevMode = false;
+        $config = Config::getInstance();
 
         // the connection configuration
         $dbParams = array(
             'driver' => 'pdo_mysql',
-            'user' => Config::$sqlUser,
-            'password' => Config::$sqlPass,
-            'dbname' => Config::$sqlDbName,
-            'host' => Config::$sqlHost,
-            'port' => Config::$sqlPort,
+            'user' => $config->getSqlUser(),
+            'password' => $config->getSqlPass(),
+            'dbname' => $config->getSqlDbName(),
+            'host' => $config->getSqlHost(),
+            'port' => $config->getSqlPort(),
         );
 
-        $config = Setup::createAnnotationMetadataConfiguration(
-            array(Config::$folderNameModels),
-            $isDevMode);
+        $paths = array();
+        $projects = $config->getApiRoutes()->getProjects()->toArray();
+        foreach($projects as $project) {
+            $path = Util::file_exists_ci(
+                Util::buildPath($config->getPathProjects(), $project->getName(), $config->getFolderNameModels()));
+            if(is_string($path)) {
+                $paths[] = $path;
+            }
+        }
 
-        $config->setProxyDir(realpath(__DIR__."/../vendor/doctrine/proxy/"));
+        $config = Setup::createAnnotationMetadataConfiguration(
+            $paths,
+            $config->isDevMode());
+
+        $config->setProxyDir(realpath(__DIR__."/../../../doctrine/proxy/"));
         $config->setProxyNamespace('IonXApi\Proxies');
 
         self::$entityManager = EntityManager::create($dbParams, $config);

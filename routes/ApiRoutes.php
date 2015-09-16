@@ -19,7 +19,7 @@ class ApiRoutes {
      * @param ApiProject[] $projects=null
      */
     public function __construct($projects=null) {
-        $this->projects = new ArrayCollection("IonXApi\\routes\\ApiProject");
+        $this->projects = new ArrayCollection("IonXLab\\IonXApi\\routes\\ApiProject");
         $this->setProjects($projects);
     }
 

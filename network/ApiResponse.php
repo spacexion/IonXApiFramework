@@ -18,7 +18,7 @@ class ApiResponse {
      */
 	private $body;
     /**
-     * @var \IonXApi\network\ApiResponse
+     * @var \IonXLab\IonXApi\network\ApiResponse
      */
     private static $instance = null;
 

@@ -9,8 +9,6 @@ use IonXLab\IonXApi\util\EntityMgr;
 use IonXLab\IonXApi\util\Util;
 use ReflectionMethod;
 
-IonXApi::$autoloader = require_once __DIR__."/util/AutoLoad.php";
-
 /**
  * IonX Api Framework<br/>
  * This is the main class of this framework.
@@ -32,10 +30,9 @@ class IonXApi {
     private static $SUPPORTED_CONTENT_TYPES = array("application/json"=>"json");
 
     /**
-     * @var \Composer\Autoload\ClassLoader
+     * @var \IonXLab\IonXApi\Config
      */
-    public static $autoloader;
-
+    private $config;
     /**
      * @var ApiRequest
      */
@@ -60,15 +57,24 @@ class IonXApi {
     /**
      * @var string
      */
+    private $requestObjectFullName;
+    /**
+     * @var string
+     */
     private $requestCommand;
 
+    /**
+     * @var string
+     */
+    private $objectManagerFullName;
 
     /**
-     * @param $routes ApiRoutes the routes tree
+     * Default constructor
      */
-	public function __construct($routes) {
+	public function __construct() {
 
-        $this->apiRoutes = $routes;
+        $this->config = Config::getInstance();
+        $this->apiRoutes = $this->config->getApiRoutes();
 
         $this->apiResponse = ApiResponse::getInstance();
         $this->apiResponse->setContentType("application/json");
@@ -86,7 +92,13 @@ class IonXApi {
 
         if($this->isValidApiRoutes() && $this->isValidApiRequest()) {
 
-            $this->execCommand();
+            $updateSchema = false;
+            if($this->config->isDevMode()) {
+                $updateSchema = $this->updateSchema();
+            }
+            if(!$this->config->isDevMode() || $updateSchema) {
+                $this->execCommand();
+            }
 
             // handle the request by HTTP METHOD
 
@@ -104,6 +116,15 @@ class IonXApi {
      */
     private function isValidApiRoutes() {
 
+        if($this->apiRoutes==null) {
+            $this->apiResponse->setResponseError(500, "Sorry, routes are not defined.");
+            return false;
+        }
+
+        if(!(gettype($this->apiRoutes)=="object" && get_class($this->apiRoutes)=="IonXLab\\IonXApi\\routes\\ApiRoutes")) {
+            $this->apiResponse->setResponseError(500, "Sorry, routes are not of ApiRoutes type.");
+            return false;
+        }
         return true;
     }
 
@@ -111,7 +132,6 @@ class IonXApi {
      * Check if required data are presents and meets the api structure
      */
     private function isValidApiRequest() {
-
 
         // check if request has required data
         if(Util::isGoodString($this->apiRequest->getUrl()->getApiProject() == "")) {
@@ -139,7 +159,7 @@ class IonXApi {
         }
 
         // check if requested project exists in folder
-        if(!Util::file_exists_ci(Config::$pathProjects.$this->requestProject)) {
+        if(!Util::file_exists_ci($this->config->getPathProjects().$this->requestProject)) {
             $this->apiResponse->setResponseError(400, "Sorry, the given project ('".$this->requestProject."') doesn't exists.");
             return false;
         }
@@ -151,7 +171,11 @@ class IonXApi {
         }
 
         // check if requested object exists in folder and include it
-        $objectPath = Util::buildPath(Config::$pathProjects, $this->requestProject, Config::$folderNameModels, $this->requestObject.".php");
+        $objectPath = Util::buildPath(
+            $this->config->getPathProjects(),
+            $this->requestProject,
+            $this->config->getFolderNameModels(),
+            $this->requestObject.".php");
         if(($objectPath = Util::file_exists_ci($objectPath)) === false) {
             $this->apiResponse->setResponseError(400, "Sorry, the given object class file doesn't exists.");
             return false;
@@ -160,13 +184,16 @@ class IonXApi {
         }
 
         // Check if request object class is accessible
-        if(!class_exists('\\'.Config::$appNamespace."\\projects\\".$this->requestProject."\\".$this->requestObject)) {
+        $this->requestObjectFullName = '\\'.$this->config->getAppNamespace()."\\projects\\"
+            .$this->requestProject."\\".$this->config->getFolderNameModels()."\\".$this->requestObject;
+        if(!class_exists($this->requestObjectFullName)) {
             $this->apiResponse->setResponseError(500, "Sorry, the object class is not reachable.");
             return false;
         }
 
         // Check if Manager Php file exists and include it
-        $managerPath = Util::buildPath(Config::$pathProjects, $this->requestProject, Config::$folderNameManagers,
+        $managerPath = Util::buildPath($this->config->getPathProjects(),
+            $this->requestProject, $this->config->getFolderNameManagers(),
             $this->apiRoutes->getProject($this->requestProject)->getObject($this->requestObject)->getManager().".php");
         if(($managerPath = Util::file_exists_ci($managerPath)) === false) {
             $this->apiResponse->setResponseError(500, "Sorry, the given object has no manager.");
@@ -176,7 +203,10 @@ class IonXApi {
         }
 
         // Check if Manager PHP Class is accessible
-        if(!class_exists($this->apiRoutes->getProject($this->requestProject)->getObject($this->requestObject)->getManager())) {
+        $this->objectManagerFullName = '\\'.$this->config->getAppNamespace()."\\projects\\"
+            .$this->requestProject."\\".$this->config->getFolderNameManagers()."\\"
+            .$this->apiRoutes->getProject($this->requestProject)->getObject($this->requestObject)->getManager();
+        if(!class_exists($this->objectManagerFullName)) {
             $this->apiResponse->setResponseError(500, "Sorry, there is an error with given object manager class.");
             return false;
         }
@@ -229,15 +259,14 @@ class IonXApi {
      * Execute the command, instantiate the entity manager and try to call the right method
      */
     private function execCommand() {
-        $manager = $this->apiRoutes->getProject($this->requestProject)->getObject($this->requestObject)->getManager();
         $method = $this->requestCommand;
         $apiUrl = $this->apiRequest->getUrl();
 
         // instantiate the right manager
-        $mgr = new $manager();
+        $mgr = new $this->objectManagerFullName();
 
         // get method and method params of the instantiated manager given method
-        $reflectMethod = new ReflectionMethod($manager, $method);
+        $reflectMethod = new ReflectionMethod($this->objectManagerFullName, $method);
         $numArgs = $reflectMethod->getNumberOfParameters();
 
         // final method parameters
@@ -279,7 +308,7 @@ class IonXApi {
                 $this->apiResponse->setResponseError(400, "The request parameters don't follow the method required parameters."
                     . $numArgs . ","
                     . count($parameters) . ","
-                    . $manager . "::"
+                    . $this->objectManagerFullName . "::"
                     . $method . ")");
             }
         } else {
@@ -288,7 +317,7 @@ class IonXApi {
 
             if (!call_user_func_array(array($mgr, $method), $parameters)) {
                 if ($this->apiResponse->getStatus() == 200) {
-                    $this->apiResponse->setResponseError(400, "The method which was called has failed (".$manager."::".$method.")");
+                    $this->apiResponse->setResponseError(400, "The method which was called has failed (".$this->objectManagerFullName."::".$method.")");
                 }
             }
         }
@@ -314,9 +343,61 @@ class IonXApi {
     /**
      * @return \Symfony\Component\Console\Helper\HelperSet
      */
-    public function getCli() {
-
+    public static function getCli() {
+        new \IonXLab\IonXApi\util\EntityMgr();
         return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(EntityMgr::$entityManager);
+    }
+
+    /**
+     * Shortcut to create the db schema from models
+     * @return bool
+     */
+    public function createSchema() {
+        $result = false;
+        try {
+            $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(EntityMgr::$entityManager);
+            $classes = EntityMgr::$entityManager->getMetadataFactory()->getAllMetadata();
+            $schemaTool->dropSchema($classes);
+            $schemaTool->createSchema($classes);
+            $result=true;
+        } catch(\Exception $e) {
+            $this->apiResponse->setResponseError(500, "There was a problem while creating the database schema.");
+        }
+        return $result;
+    }
+
+    /**
+     * Shortcut to update the db schema
+     * @return bool
+     */
+    public function updateSchema() {
+        $result = false;
+        try {
+            $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(EntityMgr::$entityManager);
+            $classes = EntityMgr::$entityManager->getMetadataFactory()->getAllMetadata();
+            $schemaTool->updateSchema($classes);
+            $result=true;
+        } catch(\Exception $e) {
+            $this->apiResponse->setResponseError(500, "There was a problem while updating the database schema.");
+        }
+        return $result;
+    }
+
+    /**
+     * Shortcut to delete the db schema
+     * @return bool
+     */
+    public function deleteSchema() {
+        $result = false;
+        try {
+            $schemaTool = new \Doctrine\ORM\Tools\SchemaTool(EntityMgr::$entityManager);
+            $classes = EntityMgr::$entityManager->getMetadataFactory()->getAllMetadata();
+            $schemaTool->dropSchema($classes);
+            $result=true;
+        } catch(\Exception $e) {
+            $this->apiResponse->setResponseError(500, "There was a problem while dropping the database schema.");
+        }
+        return $result;
     }
 }
 

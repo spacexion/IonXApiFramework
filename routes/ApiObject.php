@@ -27,7 +27,7 @@ class ApiObject {
      *                  if you don't want to use the "[EntityName]Mgr" filename structure.
      */
     public function __construct($name, $commands=null, $enableQuickMethod=false, $manager=null) {
-        $this->commands = new ArrayCollection("IonXApi\\routes\\ApiCommand");
+        $this->commands = new ArrayCollection("IonXLab\\IonXApi\\routes\\ApiCommand");
         $this->name = $name;
         $this->enableQuickMethod = $enableQuickMethod;
 

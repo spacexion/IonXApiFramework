@@ -2,13 +2,14 @@
 
 namespace IonXLab\IonXApi\builtin\base;
 use IonXLab\IonXApi\network\ApiResponse;
+use IonXLab\IonXApi\util\EntityMgr;
 use IonXLab\JacksonPhp\databind\ObjectMapper;
 
 /**
  * The Base Class for API Managers
  * @author Nicolas Gezequel
  */
-class BaseMgr {
+class BaseManager {
 
     /**
      * @var string the controller class name
@@ -20,8 +21,8 @@ class BaseMgr {
     protected $entityName;
 
     /**
-     * @param $entityName string the controller class name
-     * @param $controller string the managed object name
+     * @param $entityName string The managed entity name
+     * @param $controller \IonXLab\IonXApi\builtin\base\BaseController The controller
      */
     public function __construct($entityName, $controller) {
         $this->entityName = $entityName;
@@ -104,8 +105,6 @@ class BaseMgr {
      * @param $json
      * @param string $controllerMethod
      * @return bool success
-     * @internal param bool $checkEmptyVars
-     * @internal param String $Json the received Json Data String
      */
     protected function putObject($id, $json, $controllerMethod = "update") {
         $objectJson = json_decode($json);
